@@ -30,11 +30,11 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Try loading credentials from secure storage and use them to auto-login
   Future<void> attemptAutoLogin() async {
-    setState(() {
-      loading = true;
-    });
     final UserCredentials? userCreds = await LocalIoService.readCredentials();
     if (userCreds!.username != null) {
+      setState(() {
+        loading = true;
+      });
       unawaited(
         APIService.login(
           userCreds.username!,
