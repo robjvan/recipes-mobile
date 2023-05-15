@@ -1,11 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:path/path.dart';
-import 'package:recipes_mobile/services/db.services.dart';
+import 'package:recipes_mobile/services/db.service.dart';
 import 'package:recipes_mobile/utilities/utilties.dart';
-import 'package:sqflite/sqflite.dart';
 // import 'package:recipes_mobile/utilities/utilities.dart';
 
 final Uri serverUrl = Uri.parse('http://192.168.0.88:3000');
@@ -21,10 +21,7 @@ void main() async {
   ]);
 
   /// Initialize local DB
-  DBService.db = openDatabase(
-    join(await getDatabasesPath(), 'recipes.db'),
-    onCreate: DBService.onCreate,
-  );
+  unawaited(DBService.openDB());
 
   /// Launch the app
   runApp(MyApp());

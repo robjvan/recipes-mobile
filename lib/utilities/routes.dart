@@ -15,5 +15,17 @@ class AppRoutes {
       name: LoginPage.routeName,
       page: LoginPage.new,
     ),
+    GetPage<dynamic>(
+      name: CollectionPage.routeName,
+      page: CollectionPage.new,
+    ),
+    GetPage<dynamic>(
+      name: FavoritesPage.routeName,
+      page: FavoritesPage.new,
+    ),
+    GetPage<dynamic>(
+      name: SettingsPage.routeName,
+      page: SettingsPage.new,
+    ),
   ];
 }

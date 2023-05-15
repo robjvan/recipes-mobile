@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:recipes_mobile/controllers/app_state.controller.dart';
+import 'package:recipes_mobile/models/user_credentials.model.dart';
 import 'package:recipes_mobile/pages/pages.dart';
 import 'package:recipes_mobile/services/auth.service.dart';
+import 'package:recipes_mobile/services/services.dart';
 import 'package:recipes_mobile/utilities/utilties.dart';
 
 class LoginButton extends StatelessWidget {
@@ -28,47 +30,12 @@ class LoginButton extends StatelessWidget {
       ),
       onPressed: () async {
         if (formKey.currentState!.validate()) {
-          final http.Response response = await AuthService.login(
-            username: usernameController.text,
-            password: passwordController.text,
+          unawaited(
+            APIService.login(
+              usernameController.text,
+              passwordController.text,
+            ),
           );
-
-          switch (response.statusCode) {
-            case 201:
-              // Login successful
-              AppStateController.token.value =
-                  jsonDecode(response.body)['accessToken'];
-              unawaited(Get.offAllNamed(DashboardPage.routeName));
-              break;
-
-            case 401:
-              // Incorrect credentials
-              unawaited(
-                Get.dialog(
-                  const Dialog(
-                    child: Text(
-                      'Wrong username or password, try again', // TODO(Rob): Add translation strings
-                      style: TextStyle(),
-                    ),
-                  ),
-                ),
-              );
-              break;
-
-            case 500:
-              // Server error
-              unawaited(
-                Get.dialog(
-                  const Dialog(
-                    child: Text(
-                      'Server error, try again later', // TODO(Rob): Add translation strings
-                      style: TextStyle(),
-                    ),
-                  ),
-                ),
-              );
-              break;
-          }
         }
       },
       child: Padding(
@@ -76,7 +43,7 @@ class LoginButton extends StatelessWidget {
         child: Text(
           'login'.tr,
           style: const TextStyle(
-            fontSize: 32.0,
+            fontSize: 18.0,
             color: AppColors.lightBlue,
           ),
         ),

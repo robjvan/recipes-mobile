@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:recipes_mobile/controllers/app_state.controller.dart';
 import 'package:recipes_mobile/main.dart';
 import 'package:recipes_mobile/pages/login.page.dart';
+import 'package:recipes_mobile/services/local_io.service.dart';
 
 @immutable
 class AuthService {
@@ -51,8 +53,9 @@ class AuthService {
     );
   }
 
-  static void logout() {
+  static Future<void> logout() async {
     AppStateController.token.value = '';
-    Get.offAndToNamed(LoginPage.routeName);
+    await LocalIoService.clearCredentials();
+    unawaited(Get.offAndToNamed(LoginPage.routeName));
   }
 }

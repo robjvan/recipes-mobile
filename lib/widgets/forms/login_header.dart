@@ -36,7 +36,7 @@ class LoginHeader extends StatelessWidget {
             'app_title'.tr,
             style: const TextStyle(
               color: AppColors.white,
-              fontSize: 72.0,
+              fontSize: 56.0,
               fontFamily: 'Hero',
               fontWeight: FontWeight.bold,
               shadows: <Shadow>[

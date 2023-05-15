@@ -5,4 +5,6 @@ final Map<String, String> englishStrings = <String, String>{
   'reset-password': 'Reset Password',
   'forgot-password': 'Forgot password?',
   'login': 'Login',
+  'username': 'Username',
+  'password': 'Password'
 };

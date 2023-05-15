@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:recipes_mobile/utilities/utilties.dart';
 
 class PasswordField extends StatefulWidget {
@@ -18,7 +19,7 @@ class _PasswordFieldState extends State<PasswordField> {
     return TextFormField(
       style: const TextStyle(
         color: AppColors.grey,
-        fontSize: 24.0,
+        // fontSize: 24.0,
       ),
       obscureText: obscurePass,
       controller: widget.passwordController,
@@ -30,6 +31,7 @@ class _PasswordFieldState extends State<PasswordField> {
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
+        hintText: 'password'.tr, // TODO(Rob): Add translation strings
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(50),
@@ -44,19 +46,16 @@ class _PasswordFieldState extends State<PasswordField> {
             size: 28,
           ),
         ),
-        suffix: GestureDetector(
+        suffixIcon: GestureDetector(
           onTap: () {
             setState(() {
               obscurePass = !obscurePass;
             });
           },
-          child: Transform.translate(
-            offset: const Offset(-12.0, 6.0),
-            child: Icon(
-              obscurePass ? Icons.visibility : Icons.visibility_off,
-              size: 28,
-              color: AppColors.grey,
-            ),
+          child: Icon(
+            obscurePass ? Icons.visibility : Icons.visibility_off,
+            // size: 24,
+            color: AppColors.grey,
           ),
         ),
       ),

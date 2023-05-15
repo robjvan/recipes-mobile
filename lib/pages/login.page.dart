@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipes_mobile/models/models.dart';
+import 'package:recipes_mobile/models/user_credentials.model.dart';
+import 'package:recipes_mobile/services/services.dart';
 import 'package:recipes_mobile/utilities/utilties.dart';
 import 'package:recipes_mobile/widgets/forms/buttons/buttons.dart';
 import 'package:recipes_mobile/widgets/widgets.dart';
@@ -16,6 +20,29 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> formKey = GlobalKey();
   PagePurpose purpose = PagePurpose.login;
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    attemptAutoLogin();
+  }
+
+  /// Try loading credentials from secure storage and use them to auto-login
+  Future<void> attemptAutoLogin() async {
+    setState(() {
+      loading = true;
+    });
+    final UserCredentials? userCreds = await LocalIoService.readCredentials();
+    if (userCreds!.username != null) {
+      unawaited(
+        APIService.login(
+          userCreds.username!,
+          userCreds.password!,
+        ),
+      );
+    }
+  }
 
   Widget buildFormChild() {
     switch (purpose) {
@@ -63,42 +90,63 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Widget buildLoadingIndicator() {
+    return const Center(
+      child: Column(
+        children: <Widget>[
+          CircularProgressIndicator(
+            color: AppColors.white,
+          ),
+          SizedBox(height: 8.0),
+          Text(
+            'Logging in...',
+            style: TextStyle(
+              fontSize: 16.0,
+              color: AppColors.white,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
-      // backgroundColor: AppColors.lightBlue,
-
       body: Stack(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: <Color>[
-                  AppColors.lightBlue.withOpacity(0.1),
+                  AppColors.white,
                   AppColors.lightBlue,
                   AppColors.lightBlue,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                stops: const <double>[0.0, 0.9, 1.0],
+                stops: <double>[0.0, 0.9, 1.0],
               ),
             ),
           ),
-          SafeArea(
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const Spacer(),
-                  LoginHeader(purpose),
-                  const Spacer(),
-                  buildFormChild(),
-                  const Spacer(),
-                  purpose == PagePurpose.login
-                      ? buildActionButtons()
-                      : CancelButton(cancelBtnFn),
-                ],
+          GestureDetector(
+            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: Get.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const Spacer(),
+                    LoginHeader(purpose),
+                    const Spacer(),
+                    loading ? buildLoadingIndicator() : buildFormChild(),
+                    const Spacer(),
+                    purpose == PagePurpose.login
+                        ? buildActionButtons()
+                        : CancelButton(cancelBtnFn),
+                  ],
+                ),
               ),
             ),
           ),
