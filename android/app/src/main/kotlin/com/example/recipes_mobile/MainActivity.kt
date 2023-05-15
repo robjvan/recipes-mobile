@@ -1,4 +1,4 @@
-package com.example.recipes_mobile
+package ca.robjvan.recipes_mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
